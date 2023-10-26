@@ -11,8 +11,8 @@ Matrix::Matrix()  : intermatrix {
 		//test determinate
 		{1,3,1,5,3},
 		{-2,-7,0,-4,2},
-		{0,0,1,0,0},
-		{0,0,2,1,0},
+		{0,0,1,0,1},
+		{0,0,2,1,1},
 		{0,0,0,1,1}, // final determinate is negative 2
 		// factor test
 		{2,4,8,12,2},
@@ -23,31 +23,34 @@ Matrix::Matrix()  : intermatrix {
 		*/
 }
 { }
+/*
+	Main function used to reduce the matrix
+*/
 void Matrix::solve()
 {
-	
+		// main while loop
 		while (pivot < maxsize)
 		{
 		if (checkpivotvalue() == 1)
 		{
-			addcolumn(pivot, pivot);
+			reducecolumn(pivot, pivot);
 			//std::cout << "intermatrix " << intermatrix[pivot][pivot] << std::endl; //Debug
 		}
 		else if (checkpivotvalue() > 1)
 		{
 			simplify(pivot);
-			addcolumn(pivot, pivot);
+			reducecolumn(pivot, pivot);
 		}
 		else if (checkpivotvalue() == -1)
 		{
 			changesign(pivot, pivot);
-			addcolumn(pivot, pivot);
+			reducecolumn(pivot, pivot);
 		}
 		else if (checkpivotvalue() < 0)
 		{
 			changesign(pivot, pivot);
 			simplify(pivot);
-			addcolumn(pivot, pivot);
+			reducecolumn(pivot, pivot);
 		}
 		pivot++;
 	//	std::cout << "pivot: " << pivot << std::endl; //Debug
@@ -64,11 +67,15 @@ void Matrix::simplify(int column)
 	
 	int divider = intermatrix[column][column];
 	//std::cout << divider;
+	/*
+	* Check for a commondominator in the row
+	*/
 	if (checkcommondenominator(column,divider) == true)
 	{
+		// Add to outside items
 		outside[outsideitems] = divider;
 		outsideitems++;
-
+		// traverse the matrix and divide
 		for (int traverse = column; traverse < maxsize; traverse++)
 		{
 			intermatrix[column][traverse] =  intermatrix[column][traverse] / divider;
@@ -77,7 +84,7 @@ void Matrix::simplify(int column)
 	}
 	else
 	{
-
+		//traverse the matrix and divide
 		for (int traverse = column; traverse < maxsize; traverse++)
 		{
 		intermatrix[column][traverse] = intermatrix[column][traverse] / divider;
@@ -99,31 +106,34 @@ void Matrix::simplify(int column)
 bool Matrix::checkcommondenominator(int current,int divider)
 {
 	int cursor = 0;
-
+	// goes through matrix and find a number with no remainder
 	while (cursor < maxsize)
 	{
 		
 		int check = intermatrix[current][cursor] % divider;
-
+		//if has remainder return false
 		if (check != 0)
 		{
 			return false;
 		}
 		cursor++;
 	}
-	std::cout << "common denominator found\n";
+
+	//Debug 
+	//std::cout << "common denominator found\n";
+
 	return true;
 }
 /*
 	Goes through each element in the column and performs row operation to get all element to zero
 */
-void Matrix::addcolumn(int row,int column)
+void Matrix::reducecolumn(int row,int column)
 {
 	
 	int multiple;
 	int next = column;
-	
-		while (next < maxsize - 1 ) // check if this wont get the multiple out of bound
+	// goes through matrix and reduce the current column
+		while (next < maxsize - 1 ) 
 		{
 			
 			next++;
@@ -162,6 +172,7 @@ void Matrix::addcolumn(int row,int column)
 
 	
 }
+
 void Matrix::changesign(int row,int column) {
 	int currentcolumn = column;
 	outside[outsideitems] = -1;
@@ -199,6 +210,7 @@ void Matrix::showoutsideitems()
 }
 void Matrix::input()
 {
+	// goes through each element and ask for input
 	int userentry;
 	for (int column = 0; column < maxsize;column++)
 	{

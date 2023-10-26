@@ -9,21 +9,28 @@ private:
 	int intermatrix[maxsize][maxsize];
 	bool rowechelon = false;
 
-	int outside[maxsize];
+	// The numbers that are taken out of the matrix
+	int outside[12];
+	// variable used to keep track of the ammount of items
 	int outsideitems = 0;
+	// Adds number to the array of outside
 	void additem();
+	// final calculates the determinate
 	void calculatedeterminate();
-	//Pivot
-
+	//Pivot used to keep track of row and column;
 	int pivot = 0;
+	// returns what row and column the matrix is on
 	int checkpivotvalue();
-	void pivotmove();
+
 
 	//Operations
-
+	//Simplify the row
 	void simplify(int column);
-	void addcolumn(int row, int column);
+	//Reduces the row
+	void reducecolumn(int row, int column);
+	// Check for common denominator
 	bool checkcommondenominator(int current, int divider);
+	// Changes the sign of the rest of the row
 	void changesign(int row, int column);
 
 	// Checks
